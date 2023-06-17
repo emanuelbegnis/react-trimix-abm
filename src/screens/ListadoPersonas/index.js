@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import { useBorrarPersona, useListadoPersonas } from "../../querys/personas";
 import Confirmacion from "../../components/Confirmacion";
+import { NuevaPersona } from "./NuevaPersona";
 
 const ListadoPersonas = () => {
   const [tipo, setTipo] = useState("dni");
@@ -27,6 +28,7 @@ const ListadoPersonas = () => {
   };
 
   const [showConfirm, setShowConfirm] = useState(defaultConfirm);
+  const [show, setShow] = useState(false);
 
   const handleUpdate = () => {
     borrarPersona.mutate({
@@ -44,8 +46,12 @@ const ListadoPersonas = () => {
         <div>
           <div className="d-flex justify-content-between align-items-center">
             <h5>Personas</h5>
-            <Button variant="success" className="btn-sm mx-2">
-              <TbPlus /> Nuevo
+            <Button
+              variant="success"
+              className="btn-sm mx-2"
+              onClick={() => setShow(true)}
+            >
+              <TbPlus /> Nueva
             </Button>
           </div>
           <hr />
@@ -159,6 +165,7 @@ const ListadoPersonas = () => {
             showConfirm={showConfirm.show}
             setShowConfirm={() => setShowConfirm(defaultConfirm)}
           ></Confirmacion>
+          <NuevaPersona show={show} setShow={setShow}></NuevaPersona>
         </div>
       )}
     </>

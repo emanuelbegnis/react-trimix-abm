@@ -17,7 +17,6 @@ function useListadoPersonas() {
       for (const persona of data) {
         queryClient.setQueryData(["Persona", persona.id], persona);
       }
-      // console.log(data);
     },
   });
 }
@@ -37,4 +36,26 @@ function useBorrarPersona() {
   );
 }
 
-export { useListadoPersonas, useBorrarPersona };
+function useNuevapersona(id) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ nombre, apellido, fechanacimiento, nrodocumento, tipodocumento }) =>
+      conexion("persona", {
+        method: "POST",
+        data: {
+          perNombre: nombre,
+          perApellido: apellido,
+          perFechaNacimiento: fechanacimiento,
+          perNumeroDocumento: nrodocumento,
+          perTipoDocumento: tipodocumento,
+        },
+      }),
+    {
+      onSettled: () => {
+        queryClient.invalidateQueries(`Personas`, id);
+      },
+    }
+  );
+}
+
+export { useListadoPersonas, useBorrarPersona, useNuevapersona };

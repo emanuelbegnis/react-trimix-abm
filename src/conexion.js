@@ -14,6 +14,7 @@ function conexion(
     },
     ...customConfig,
   };
+  console.log(method);
 
   return window
     .fetch(`${apiURL}/${endpoint}`, config)
