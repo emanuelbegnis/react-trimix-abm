@@ -16,7 +16,8 @@ import { NuevaPersona } from "./NuevaPersona";
 const ListadoPersonas = () => {
   const [tipo, setTipo] = useState("dni");
   const [nombre, setNombre] = useState("");
-
+  const [persona, setPersona] = useState(null);
+  const [titulo, setTitulo] = useState("Nueva Persona");
   const personas = useListadoPersonas();
   const { isLoading, isError, data } = personas;
 
@@ -137,7 +138,15 @@ const ListadoPersonas = () => {
                   <td>{persona.perNumeroDocumento}</td>
                   <td>{persona.perFechaNacimiento}</td>
                   <td>
-                    <Button variant="primary" className="btn-sm mx-2">
+                    <Button
+                      variant="primary"
+                      className="btn-sm mx-2"
+                      onClick={() => [
+                        setPersona({ persona: persona }),
+                        setTitulo("Editar Persona"),
+                        setShow(true),
+                      ]}
+                    >
                       <TbEdit />
                     </Button>
                   </td>
@@ -165,7 +174,14 @@ const ListadoPersonas = () => {
             showConfirm={showConfirm.show}
             setShowConfirm={() => setShowConfirm(defaultConfirm)}
           ></Confirmacion>
-          <NuevaPersona show={show} setShow={setShow}></NuevaPersona>
+          <NuevaPersona
+            show={show}
+            setShow={setShow}
+            persona={persona}
+            titulo={titulo}
+            setPersona={setPersona}
+            setTitulo={setTitulo}
+          ></NuevaPersona>
         </div>
       )}
     </>

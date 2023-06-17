@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { TbUserCircle, TbDeviceFloppy } from "react-icons/tb";
+import { TbDeviceFloppy } from "react-icons/tb";
 import {
   Modal,
   Button,
@@ -12,11 +12,20 @@ import {
 import Datepicker from "../../components/Datepicker";
 import { useNuevapersona } from "../../querys/personas";
 
-function NuevaPersona({ show, setShow }) {
+function NuevaPersona({
+  show,
+  setShow,
+  persona,
+  setPersona,
+  titulo,
+  setTitulo,
+}) {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [fechanacimiento, setFechanacimiento] = useState("");
-  const [tipodocumento, setTipoDocumento] = useState("dni");
+  const [tipodocumento, setTipoDocumento] = useState(
+    persona?.persona.perTipoDocumento ?? "dni"
+  );
   const [nrodocumento, setNrodocumento] = useState("");
   const [mensajeError, setMensajeError] = useState();
 
@@ -27,6 +36,8 @@ function NuevaPersona({ show, setShow }) {
     setTipoDocumento("dni");
     setNrodocumento("");
     setMensajeError();
+    setPersona(null);
+    setTitulo("Nueva Persona");
   };
 
   const nuevaPersona = useNuevapersona();
@@ -63,9 +74,14 @@ function NuevaPersona({ show, setShow }) {
   };
 
   return (
-    <Modal className="p-0" show={show} fullscreen onHide={() => setShow(false)}>
+    <Modal
+      className="p-0"
+      show={show}
+      fullscreen
+      onHide={() => [setShow(false), resetPersona()]}
+    >
       <Modal.Header closeButton>
-        <Modal.Title>Nueva Persona</Modal.Title>
+        <Modal.Title>{titulo}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={submitHandler}>
@@ -79,7 +95,7 @@ function NuevaPersona({ show, setShow }) {
                     name="nombre"
                     placeholder=""
                     autoComplete="off"
-                    value={nombre}
+                    value={persona?.persona.perNombre ?? nombre}
                     onChange={(e) => setNombre(e.target.value)}
                     className="text-uppercase"
                   />
@@ -91,7 +107,7 @@ function NuevaPersona({ show, setShow }) {
                     name="apellido"
                     placeholder=""
                     autoComplete="off"
-                    value={apellido}
+                    value={persona?.persona.perApellido ?? apellido}
                     onChange={(e) => setApellido(e.target.value)}
                     className="text-uppercase"
                   />
@@ -99,7 +115,9 @@ function NuevaPersona({ show, setShow }) {
                 <div className="col-12 col-md-4">
                   <Form.Label>Fecha Nacimiento</Form.Label>
                   <Datepicker
-                    fecha={fechanacimiento}
+                    fecha={
+                      persona?.persona.perFechaNacimiento ?? fechanacimiento
+                    }
                     setFecha={setFechanacimiento}
                   ></Datepicker>
                 </div>
@@ -114,7 +132,7 @@ function NuevaPersona({ show, setShow }) {
                     name="nrodocumento"
                     placeholder=""
                     autoComplete="off"
-                    value={nrodocumento}
+                    value={persona?.persona.perNumeroDocumento ?? nrodocumento}
                     onChange={(e) => setNrodocumento(e.target.value)}
                     className="text-uppercase"
                   />
