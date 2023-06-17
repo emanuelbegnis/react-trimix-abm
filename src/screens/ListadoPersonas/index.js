@@ -40,7 +40,7 @@ const ListadoPersonas = () => {
     <>
       {isLoading ? (
         <h5>Cargando...</h5>
-      ) : isError || data.length === 0 ? (
+      ) : isError || data?.length === 0 ? (
         <h5 className="mt-2">Aún no hay personas cargadas.</h5>
       ) : (
         <div>

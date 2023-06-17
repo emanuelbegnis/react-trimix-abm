@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const apiURL = "http://localhost:8080";
 const corsVar = "cors";
 
@@ -7,21 +9,36 @@ function conexion(
 ) {
   const config = {
     mode: corsVar,
-    body: data ? new URLSearchParams(data) : undefined,
     headers: {
       "Content-Type": data ? "application/json" : undefined,
       ...customHeaders,
     },
     ...customConfig,
   };
-  console.log(method);
 
-  return window
-    .fetch(`${apiURL}/${endpoint}`, config)
-    .then(async (response) => await response.json())
-    .then((data) => {
-      console.log(data);
-      return data;
+  // Configurar token si es necesario
+  if (token) {
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  // Configurar método y datos según corresponda
+  let axiosPromise;
+  if (method === "GET") {
+    axiosPromise = axios.get(`${apiURL}/${endpoint}`, config);
+  } else if (method === "POST") {
+    axiosPromise = axios.post(`${apiURL}/${endpoint}`, data, config);
+  } else if (method === "PUT") {
+    axiosPromise = axios.put(`${apiURL}/${endpoint}`, data, config);
+  } else if (method === "DELETE") {
+    axiosPromise = axios.delete(`${apiURL}/${endpoint}`, config);
+  } else {
+    throw new Error(`Método no soportado: ${method}`);
+  }
+
+  return axiosPromise
+    .then((response) => {
+      console.log(response.data);
+      return response.data;
     })
     .catch((error) => {
       console.log(error);
