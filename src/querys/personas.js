@@ -58,4 +58,31 @@ function useNuevapersona(id) {
   );
 }
 
-export { useListadoPersonas, useBorrarPersona, useNuevapersona };
+function useEditarpersona(id) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ nombre, apellido, fechanacimiento, nrodocumento, tipodocumento }) =>
+      conexion(`persona/${id}`, {
+        method: "PUT",
+        data: {
+          perNombre: nombre,
+          perApellido: apellido,
+          perFechaNacimiento: fechanacimiento,
+          perNumeroDocumento: nrodocumento,
+          perTipoDocumento: tipodocumento,
+        },
+      }),
+    {
+      onSettled: () => {
+        queryClient.invalidateQueries(`Personas`, id);
+      },
+    }
+  );
+}
+
+export {
+  useListadoPersonas,
+  useBorrarPersona,
+  useNuevapersona,
+  useEditarpersona,
+};

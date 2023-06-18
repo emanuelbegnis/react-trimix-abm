@@ -37,7 +37,7 @@ function conexion(
 
   return axiosPromise
     .then((response) => {
-      console.log(response.data);
+      console.log(response.status);
       return response.data;
     })
     .catch((error) => {

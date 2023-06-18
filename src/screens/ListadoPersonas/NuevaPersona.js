@@ -10,7 +10,7 @@ import {
   Row,
 } from "react-bootstrap";
 import Datepicker from "../../components/Datepicker";
-import { useNuevapersona } from "../../querys/personas";
+import { useEditarpersona, useNuevapersona } from "../../querys/personas";
 
 function NuevaPersona({
   show,
@@ -42,6 +42,8 @@ function NuevaPersona({
 
   const nuevaPersona = useNuevapersona();
 
+  const editaPersona = useEditarpersona();
+
   const submitHandler = (e) => {
     e.preventDefault();
 
@@ -61,13 +63,26 @@ function NuevaPersona({
         nrodocumento: nrodocumento,
         tipodocumento: tipodocumento,
       });
-      nuevaPersona.mutate({
-        nombre: nombre,
-        apellido: apellido,
-        fechanacimiento: fechanacimiento,
-        nrodocumento: nrodocumento,
-        tipodocumento: tipodocumento,
-      });
+      if (persona === null) {
+        nuevaPersona.mutate({
+          nombre: nombre,
+          apellido: apellido,
+          fechanacimiento: fechanacimiento,
+          nrodocumento: nrodocumento,
+          tipodocumento: tipodocumento,
+        });
+        console.log("nueva");
+      } else {
+        editaPersona.mutate({
+          nombre: nombre,
+          apellido: apellido,
+          fechanacimiento: fechanacimiento,
+          nrodocumento: nrodocumento,
+          tipodocumento: tipodocumento,
+        });
+        console.log("edita");
+      }
+
       resetPersona();
       setShow(false);
     }
