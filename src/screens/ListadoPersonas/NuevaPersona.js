@@ -20,19 +20,24 @@ function NuevaPersona({
   titulo,
   setTitulo,
 }) {
-  console.log(persona);
-  const [nombre, setNombre] = useState(persona?.persona.perNombre ?? "");
-  const [apellido, setApellido] = useState(persona?.persona.perApellido ?? "");
-  const [fechanacimiento, setFechanacimiento] = useState(
-    persona?.persona.perFechaNacimiento ?? ""
-  );
-  const [tipodocumento, setTipoDocumento] = useState(
-    persona?.persona.perTipoDocumento ?? "dni"
-  );
-  const [nrodocumento, setNrodocumento] = useState(
-    persona?.persona.perNumeroDocumento ?? ""
-  );
+  // console.log(persona);
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [fechanacimiento, setFechanacimiento] = useState("");
+  const [tipodocumento, setTipoDocumento] = useState("dni");
+  const [nrodocumento, setNrodocumento] = useState("");
   const [mensajeError, setMensajeError] = useState();
+
+  useEffect(() => {
+    if (persona) {
+      console.log("hay persona");
+      setNombre(persona.persona.perNombre);
+      setApellido(persona.persona.perApellido);
+      setFechanacimiento(persona.persona.perFechaNacimiento);
+      setTipoDocumento(persona.persona.perTipoDocumento);
+      setNrodocumento(persona.persona.perNumeroDocumento);
+    }
+  }, [persona]);
 
   const resetPersona = () => {
     setNombre("");
