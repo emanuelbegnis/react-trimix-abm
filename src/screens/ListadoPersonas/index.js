@@ -12,6 +12,7 @@ import {
 import { useBorrarPersona, useListadoPersonas } from "../../querys/personas";
 import Confirmacion from "../../components/Confirmacion";
 import { NuevaPersona } from "./NuevaPersona";
+import { formatoFecha } from "../../utils/utils";
 
 const ListadoPersonas = () => {
   const [tipo, setTipo] = useState("dni");
@@ -131,12 +132,17 @@ const ListadoPersonas = () => {
             <tbody>
               {data?.map((persona) => (
                 <tr key={persona.id}>
-                  <td>{persona.id}</td>
-                  <td>{persona.perNombre}</td>
-                  <td>{persona.perApellido}</td>
-                  <td>{persona.perTipoDocumento}</td>
+                  <td className="text-uppercase">{persona.id}</td>
+                  <td className="text-uppercase">{persona.perNombre}</td>
+                  <td className="text-uppercase">{persona.perApellido}</td>
+                  <td className="text-uppercase">{persona.perTipoDocumento}</td>
                   <td>{persona.perNumeroDocumento}</td>
-                  <td>{persona.perFechaNacimiento}</td>
+                  <td>
+                    {formatoFecha(
+                      new Date(persona.perFechaNacimiento),
+                      "dd-mm-yyyy"
+                    )}
+                  </td>
                   <td>
                     <Button
                       variant="primary"
