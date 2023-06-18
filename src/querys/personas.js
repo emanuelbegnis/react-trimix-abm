@@ -36,7 +36,7 @@ function useBorrarPersona() {
   );
 }
 
-function useNuevapersona(id) {
+function useNuevapersona() {
   const queryClient = useQueryClient();
   return useMutation(
     ({ nombre, apellido, fechanacimiento, nrodocumento, tipodocumento }) =>
@@ -52,16 +52,16 @@ function useNuevapersona(id) {
       }),
     {
       onSettled: () => {
-        queryClient.invalidateQueries(`Personas`, id);
+        queryClient.invalidateQueries(`Personas`);
       },
     }
   );
 }
 
-function useEditarpersona(id) {
+function useEditarpersona() {
   const queryClient = useQueryClient();
   return useMutation(
-    ({ nombre, apellido, fechanacimiento, nrodocumento, tipodocumento }) =>
+    ({ id, nombre, apellido, fechanacimiento, nrodocumento, tipodocumento }) =>
       conexion(`persona/${id}`, {
         method: "PUT",
         data: {
@@ -74,7 +74,7 @@ function useEditarpersona(id) {
       }),
     {
       onSettled: () => {
-        queryClient.invalidateQueries(`Personas`, id);
+        queryClient.invalidateQueries(`Personas`);
       },
     }
   );

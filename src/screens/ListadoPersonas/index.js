@@ -154,9 +154,7 @@ const ListadoPersonas = () => {
                     <Button
                       variant="danger"
                       className="btn-sm"
-                      onClick={() =>
-                        setShowConfirm({ show: true, persona: persona })
-                      }
+                      onClick={() => setShowConfirm({ show: true, persona })}
                     >
                       <TbTrash />
                     </Button>

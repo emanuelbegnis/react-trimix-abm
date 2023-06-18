@@ -20,13 +20,18 @@ function NuevaPersona({
   titulo,
   setTitulo,
 }) {
-  const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
-  const [fechanacimiento, setFechanacimiento] = useState("");
+  console.log(persona);
+  const [nombre, setNombre] = useState(persona?.persona.perNombre ?? "");
+  const [apellido, setApellido] = useState(persona?.persona.perApellido ?? "");
+  const [fechanacimiento, setFechanacimiento] = useState(
+    persona?.persona.perFechaNacimiento ?? ""
+  );
   const [tipodocumento, setTipoDocumento] = useState(
     persona?.persona.perTipoDocumento ?? "dni"
   );
-  const [nrodocumento, setNrodocumento] = useState("");
+  const [nrodocumento, setNrodocumento] = useState(
+    persona?.persona.perNumeroDocumento ?? ""
+  );
   const [mensajeError, setMensajeError] = useState();
 
   const resetPersona = () => {
@@ -74,6 +79,7 @@ function NuevaPersona({
         console.log("nueva");
       } else {
         editaPersona.mutate({
+          id: persona.persona.id,
           nombre: nombre,
           apellido: apellido,
           fechanacimiento: fechanacimiento,
@@ -110,7 +116,7 @@ function NuevaPersona({
                     name="nombre"
                     placeholder=""
                     autoComplete="off"
-                    value={persona?.persona.perNombre ?? nombre}
+                    value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
                     className="text-uppercase"
                   />
@@ -122,7 +128,7 @@ function NuevaPersona({
                     name="apellido"
                     placeholder=""
                     autoComplete="off"
-                    value={persona?.persona.perApellido ?? apellido}
+                    value={apellido}
                     onChange={(e) => setApellido(e.target.value)}
                     className="text-uppercase"
                   />
@@ -130,9 +136,7 @@ function NuevaPersona({
                 <div className="col-12 col-md-4">
                   <Form.Label>Fecha Nacimiento</Form.Label>
                   <Datepicker
-                    fecha={
-                      persona?.persona.perFechaNacimiento ?? fechanacimiento
-                    }
+                    fecha={fechanacimiento}
                     setFecha={setFechanacimiento}
                   ></Datepicker>
                 </div>
@@ -147,7 +151,7 @@ function NuevaPersona({
                     name="nrodocumento"
                     placeholder=""
                     autoComplete="off"
-                    value={persona?.persona.perNumeroDocumento ?? nrodocumento}
+                    value={nrodocumento}
                     onChange={(e) => setNrodocumento(e.target.value)}
                     className="text-uppercase"
                   />
