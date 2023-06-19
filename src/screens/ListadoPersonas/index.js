@@ -8,11 +8,13 @@ import {
   ToggleButton,
   Row,
   Col,
+  Pagination,
 } from "react-bootstrap";
 import { useBorrarPersona, useListadoPersonas } from "../../querys/personas";
 import Confirmacion from "../../components/Confirmacion";
 import { NuevaPersona } from "./NuevaPersona";
 import { formatoFecha } from "../../utils/utils";
+import ReactPaginate from "react-paginate";
 
 const ListadoPersonas = () => {
   const [tipo, setTipo] = useState("todos");
@@ -38,11 +40,28 @@ const ListadoPersonas = () => {
     });
   };
 
+  const [pageNumber, setPageNumber] = useState(0);
+  const itemsPerPage = 5; // Cantidad de elementos por página
+  const pagesVisited = pageNumber * itemsPerPage;
+
+  const pageCount = Math.ceil(data?.length / itemsPerPage);
+  const displayedData = data
+    ?.filter(
+      (per) =>
+        per.perNombre.includes(nombre) &&
+        (per.perTipoDocumento === tipo || tipo === "todos")
+    )
+    .slice(pagesVisited, pagesVisited + itemsPerPage);
+
+  const changePage = ({ selected }) => {
+    setPageNumber(selected);
+  };
+
   return (
-    <>
+    <div className="container">
       {isLoading ? (
         <h5>Cargando...</h5>
-      ) : isError || data?.length === 0 ? (
+      ) : isError || !data ? (
         <h5 className="mt-2">Aún no hay personas cargadas.</h5>
       ) : (
         <div>
@@ -132,18 +151,19 @@ const ListadoPersonas = () => {
               </tr>
             </thead>
             <tbody>
-              {data
-                ?.filter(
-                  (per) =>
-                    per.perNombre.includes(nombre) &&
-                    (per.perTipoDocumento === tipo || tipo === "todos")
-                )
+              {
+                // data
+                //   ?.filter(
+                //     (per) =>
+                //       per.perNombre.includes(nombre) &&
+                //       (per.perTipoDocumento === tipo || tipo === "todos")
+                //   )
                 // ?.filter((per) => {
                 //   const regex = new RegExp(`${nombre}`, "gi");
                 //   const infoPer = `${per.perNombre} ${cliente.nombreape.trim()} ${cliente.razonsocial.trim()}`;
                 //   return infoCliente.match(regex);
                 // })
-                .map((persona) => (
+                displayedData?.map((persona) => (
                   <tr key={persona.id}>
                     <td className="text-uppercase">{persona.id}</td>
                     <td className="text-uppercase">{persona.perNombre}</td>
@@ -181,9 +201,32 @@ const ListadoPersonas = () => {
                       </Button>
                     </td>
                   </tr>
-                ))}
+                ))
+              }
             </tbody>
           </Table>
+          <div className="d-flex justify-content-center">
+            <ReactPaginate
+              previousLabel={"<"}
+              nextLabel={">"}
+              breakLabel={"..."}
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakClassName={"page-item"}
+              breakLinkClassName="page-link"
+              pageCount={pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={changePage}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+            />
+          </div>
+
           <Confirmacion
             titulo={"Borrar"}
             cuerpo={
@@ -203,7 +246,7 @@ const ListadoPersonas = () => {
           ></NuevaPersona>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
