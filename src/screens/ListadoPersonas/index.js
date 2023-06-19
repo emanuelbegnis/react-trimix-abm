@@ -15,7 +15,7 @@ import { NuevaPersona } from "./NuevaPersona";
 import { formatoFecha } from "../../utils/utils";
 
 const ListadoPersonas = () => {
-  const [tipo, setTipo] = useState("dni");
+  const [tipo, setTipo] = useState("todos");
   const [nombre, setNombre] = useState("");
   const [persona, setPersona] = useState(null);
   const [titulo, setTitulo] = useState("Nueva Persona");
@@ -86,6 +86,13 @@ const ListadoPersonas = () => {
                   onChange={(value) => setTipo(value)}
                 >
                   <ToggleButton
+                    id="todos"
+                    variant={"outline-success"}
+                    value={"todos"}
+                  >
+                    Todos
+                  </ToggleButton>
+                  <ToggleButton
                     id="dni"
                     variant={"outline-success"}
                     value={"dni"}
@@ -109,11 +116,6 @@ const ListadoPersonas = () => {
                 </ToggleButtonGroup>
               </Col>
             </Row>
-            <div className="d-flex align-items-right">
-              <Button variant="primary" type="submit" className="btn-sm">
-                <TbSearch /> Buscar
-              </Button>
-            </div>
           </Form>
           <hr />
           <Table hover size="sm">
@@ -130,43 +132,56 @@ const ListadoPersonas = () => {
               </tr>
             </thead>
             <tbody>
-              {data?.map((persona) => (
-                <tr key={persona.id}>
-                  <td className="text-uppercase">{persona.id}</td>
-                  <td className="text-uppercase">{persona.perNombre}</td>
-                  <td className="text-uppercase">{persona.perApellido}</td>
-                  <td className="text-uppercase">{persona.perTipoDocumento}</td>
-                  <td>{persona.perNumeroDocumento}</td>
-                  <td>
-                    {formatoFecha(
-                      new Date(persona.perFechaNacimiento),
-                      "dd-mm-yyyy"
-                    )}
-                  </td>
-                  <td>
-                    <Button
-                      variant="primary"
-                      className="btn-sm mx-2"
-                      onClick={() => [
-                        setPersona({ persona: persona }),
-                        setTitulo("Editar Persona"),
-                        setShow(true),
-                      ]}
-                    >
-                      <TbEdit />
-                    </Button>
-                  </td>
-                  <td>
-                    <Button
-                      variant="danger"
-                      className="btn-sm"
-                      onClick={() => setShowConfirm({ show: true, persona })}
-                    >
-                      <TbTrash />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+              {data
+                ?.filter(
+                  (per) =>
+                    per.perNombre.includes(nombre) &&
+                    (per.perTipoDocumento === tipo || tipo === "todos")
+                )
+                // ?.filter((per) => {
+                //   const regex = new RegExp(`${nombre}`, "gi");
+                //   const infoPer = `${per.perNombre} ${cliente.nombreape.trim()} ${cliente.razonsocial.trim()}`;
+                //   return infoCliente.match(regex);
+                // })
+                .map((persona) => (
+                  <tr key={persona.id}>
+                    <td className="text-uppercase">{persona.id}</td>
+                    <td className="text-uppercase">{persona.perNombre}</td>
+                    <td className="text-uppercase">{persona.perApellido}</td>
+                    <td className="text-uppercase">
+                      {persona.perTipoDocumento}
+                    </td>
+                    <td>{persona.perNumeroDocumento}</td>
+                    <td>
+                      {formatoFecha(
+                        new Date(persona.perFechaNacimiento),
+                        "dd-mm-yyyy"
+                      )}
+                    </td>
+                    <td>
+                      <Button
+                        variant="primary"
+                        className="btn-sm mx-2"
+                        onClick={() => [
+                          setPersona({ persona: persona }),
+                          setTitulo("Editar Persona"),
+                          setShow(true),
+                        ]}
+                      >
+                        <TbEdit />
+                      </Button>
+                    </td>
+                    <td>
+                      <Button
+                        variant="danger"
+                        className="btn-sm"
+                        onClick={() => setShowConfirm({ show: true, persona })}
+                      >
+                        <TbTrash />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </Table>
           <Confirmacion
